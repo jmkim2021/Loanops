@@ -76,6 +76,4 @@ cd frontend && npm run typecheck && npm run build
 - DB 연결 오류: Docker가 실행 중인지, `.env`의 `POSTGRES_PASSWORD`와 `DATABASE_PASSWORD`가 같은지 확인합니다.
 - 수집 실행 실패: HTTP 연결 성공과 원천 API의 성공 응답은 별개입니다. `Source Runs` 화면에서 실패 상태와 오류 유형을 확인합니다.
 
-## 문의·라이선스·변경 이력
-
-질문이나 오류는 [GitHub Issues](https://github.com/jmkim2021/Loanops/issues)에 남길 수 있습니다. 코드는 [MIT 라이선스](LICENSE)를 따릅니다. 변경 내역은 [커밋 기록](https://github.com/jmkim2021/Loanops/commits/main)에서 확인할 수 있습니다.
+문의: jmkim020315@gmail.com
