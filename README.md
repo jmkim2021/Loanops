@@ -28,7 +28,7 @@ src/test/                                핵심 동작 검증
 frontend/src/                           운영 화면
 ```
 
-## 로컬 실행
+## 실행 조건과 설치
 
 JDK 21, Node.js 20.19 이상, Docker Compose가 필요합니다. `.env.example`을 `.env`로 복사해 로컬 DB 접속 값을 채운 뒤 실행합니다. 실제 API 키는 저장소에 포함하지 않았습니다.
 
@@ -49,6 +49,19 @@ npm run dev
 
 화면은 `http://localhost:5173`에서 열립니다. 데이터 수집·정규화·게시 작업은 서버 시작 시 자동 실행되지 않으며, 각 작업을 명시적으로 실행하도록 분리했습니다.
 
+## 사용 예시
+
+서버가 실행 중이면 `curl http://localhost:8080/api/v1/overview`로 수집·게시 현황을 조회할 수 있습니다. 실제 데이터를 수집하려면 `.env`에 해당 기관의 API 키를 설정한 뒤 별도 실행에서 다음 명령을 사용합니다.
+
+```bash
+set -a; source .env; set +a
+./gradlew bootRun --args='--spring.profiles.active=manual-ingestion --loanops.manual.source=FSS_FINLIFE'
+./gradlew bootRun --args='--spring.profiles.active=manual-normalization --loanops.manual.run-id=<SOURCE_RUN_ID>'
+./gradlew bootRun --args='--spring.profiles.active=manual-publication --loanops.manual.run-id=<SOURCE_RUN_ID>'
+```
+
+첫 명령의 결과에서 source run ID를 확인하고 뒤의 두 명령에 넣습니다. 서울시 데이터는 source를 `SEOUL_POLICY_LOAN_RATE`로 바꿔 실행합니다.
+
 ## 검증
 
 ```bash
@@ -57,3 +70,12 @@ cd frontend && npm run typecheck && npm run build
 ```
 
 백엔드 통합 테스트는 PostgreSQL Testcontainers와 WireMock으로 API 오류, 불완전한 페이지, 중복 정규화, 품질 실패 시 기존 게시 데이터 유지 등을 확인합니다.
+
+## 실행 중 문제가 생기면
+
+- DB 연결 오류: Docker가 실행 중인지, `.env`의 `POSTGRES_PASSWORD`와 `DATABASE_PASSWORD`가 같은지 확인합니다.
+- 수집 실행 실패: HTTP 연결 성공과 원천 API의 성공 응답은 별개입니다. `Source Runs` 화면에서 실패 상태와 오류 유형을 확인합니다.
+
+## 문의·라이선스·변경 이력
+
+질문이나 오류는 [GitHub Issues](https://github.com/jmkim2021/Loanops/issues)에 남길 수 있습니다. 코드는 [MIT 라이선스](LICENSE)를 따릅니다. 변경 내역은 [커밋 기록](https://github.com/jmkim2021/Loanops/commits/main)에서 확인할 수 있습니다.
